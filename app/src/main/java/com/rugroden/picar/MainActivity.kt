@@ -5,9 +5,7 @@ import android.bluetooth.BluetoothSocket
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
-import com.rugroden.BuildConfig
 import com.rugroden.R
-import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,9 +19,6 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    if(BuildConfig.DEBUG) {
-      Timber.plant(Timber.DebugTree())
-    }
 
     setContentView(R.layout.activity_main)
     fragmentContainer = findViewById(R.id.fragment_container)
@@ -35,14 +30,10 @@ class MainActivity : AppCompatActivity() {
 
   override fun onPause() {
     closeController()
-    super.onPause()
-  }
-
-  override fun onDestroy() {
     btDevice = null
     btSocket?.close()
     btSocket = null
-    super.onDestroy()
+    super.onPause()
   }
 
   override fun onBackPressed() {

@@ -25,6 +25,10 @@ import com.rugroden.picar.utils.Constants
 import com.rugroden.picar.utils.Tinter
 import com.rugroden.picar.utils.findDrawable
 import com.rugroden.picar.utils.findView
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
 import java.lang.Exception
 import java.util.*
@@ -43,6 +47,7 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
   private lateinit var recyclerView:RecyclerView
 
   //Held stuff.
+  private var connectionObservable: Disposable? = null
   private val btListAdapter:BtListAdapter = BtListAdapter(this)
   private var receiverRegistered:Boolean = false
   private val broadcastReceiver:BroadcastReceiver = object : BroadcastReceiver(){
@@ -89,12 +94,9 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
 
   override fun onPause() {
     stopScan()
+    connectionObservable?.dispose()
+    connectionObservable = null
     super.onPause()
-  }
-
-  override fun onDestroy() {
-    stopScan()
-    super.onDestroy()
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -115,7 +117,19 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
   //region --------------- START BtItemClickListener stuff ---------------
 
   override fun onclick(device: BluetoothDevice, view: View) {
-    connectToDevice(device)
+    stopScan()
+    connectionObservable?.dispose()
+    connectionObservable = null
+    connectionObservable = connectToDevice(device)
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(
+        {},
+        {error ->
+          Toast.makeText(requireContext(), "Unable to connect to '${device.name ?: "device"}'", Toast.LENGTH_SHORT).show()
+          Timber.e(error, "Unable to connect to device.")
+        }
+      )
   }
   //endregion ---------- END BtItemClickListener stuff ----------
 
@@ -174,20 +188,15 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
     btAdapter?.cancelDiscovery()
   }
 
-  private fun connectToDevice(device: BluetoothDevice){
-    stopScan()
-    val socket:BluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(Constants.BT_UUID))
-    (activity as? MainActivity)?.let {
-      it.btDevice = device
-      it.btSocket = socket
-      try {
+  private fun connectToDevice(device: BluetoothDevice):Observable<Any> {
+    return Observable.create {
+      val socket: BluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(Constants.BT_UUID))
+      (activity as? MainActivity)?.let {
+        it.btDevice = device
+        it.btSocket = socket
         socket.connect()
         it.openController()
-      } catch (e: Exception) {
-        Toast.makeText(requireContext(), "Unable to connect to device", Toast.LENGTH_SHORT).show()
-        Timber.e(e, "Unable to connect to device.")
       }
     }
-
   }
 }
