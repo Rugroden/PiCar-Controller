@@ -3,6 +3,8 @@
 
 
 <!-- START HOMESCREEN STRINGS -->
+  <string name="calibrate_neutral_zone">calibrate neutral zone</string>
+  <string name="connecting">connecting…</string>
   <string name="scan">scan</string>
   <string name="scanning">scanning</string>
   <string name="need_bt_perm">App needs Bluetooth enabled to scan for cars</string>
@@ -14,7 +16,5 @@
   <string name="cd_left">left</string>
   <string name="cd_right">right</string>
   <string name="cd_backward">backward</string>
-  <string name="calibrate_neutral_zone">calibrate neutral zone</string>
-  <string name="connecting">connecting…</string>
   <!-- END CONTENT DESCRIPTION STRINGS -->
 </resources>
