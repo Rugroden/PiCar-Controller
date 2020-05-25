@@ -11,6 +11,7 @@
 
     <style name="AppTheme.Button" parent="Widget.AppCompat.Button">
         <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:minHeight">@dimen/button_min_height</item>
     </style>
 
     <style name="AppTheme.Button.Colored">

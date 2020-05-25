@@ -33,6 +33,11 @@ class MainActivity : AppCompatActivity() {
       .commit()
   }
 
+  override fun onPause() {
+    closeController()
+    super.onPause()
+  }
+
   override fun onDestroy() {
     btDevice = null
     btSocket?.close()
@@ -41,11 +46,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onBackPressed() {
-    val handled = controllerFragment.onBackPressed()
-    if(handled) {
-      closeController()
-    }
-    else{
+    if(!closeController()) {
       super.onBackPressed()
     }
   }
@@ -62,11 +63,15 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  fun closeController(){
+  private fun closeController():Boolean{
+    var handled = false
     if(supportFragmentManager.fragments.firstOrNull() is ControllerFragment){
+      handled = controllerFragment.onBackPressed()
       supportFragmentManager.beginTransaction()
         .replace(R.id.fragment_container,homescreenFragment)
         .commit()
     }
+
+    return handled
   }
 }

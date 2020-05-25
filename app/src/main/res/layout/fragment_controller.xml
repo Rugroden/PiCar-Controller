@@ -1,71 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  xmlns:app="http://schemas.android.com/apk/res-auto">
+  >
 
-  <ImageButton
-    android:id="@+id/forward"
+  <TextView
+    android:id="@+id/debug"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
 
-    android:contentDescription="@string/cd_forward"
+    tools:text="Debug Text"
+    android:textColor="@color/black"
+    android:textStyle="bold"
+    android:textSize="20sp"
 
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toTopOf="@id/left"
-    app:layout_constraintStart_toEndOf="@id/left"
-    app:layout_constraintEnd_toStartOf="@id/right"
-
-    android:src="@drawable/forward_white_36"
-    android:tint="@color/colorPrimary"
-    />
-
-  <ImageButton
-    android:id="@+id/left"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-
-    android:contentDescription="@string/cd_left"
-
-    app:layout_constraintTop_toBottomOf="@id/forward"
-    app:layout_constraintBottom_toTopOf="@id/backward"
+    app:layout_constraintBottom_toTopOf="@id/calibrater"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toStartOf="@id/forward"
-
-    android:src="@drawable/forward_white_36"
-    android:tint="@color/colorPrimary"
-    android:rotation="-90"
-    />
-
-  <ImageButton
-    android:id="@+id/right"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-
-    android:contentDescription="@string/cd_right"
-    android:src="@drawable/forward_white_36"
-    android:tint="@color/colorPrimary"
-    android:rotation="90"
-
-    app:layout_constraintTop_toBottomOf="@id/forward"
-    app:layout_constraintBottom_toTopOf="@id/backward"
-    app:layout_constraintStart_toEndOf="@id/forward"
     app:layout_constraintEnd_toEndOf="parent"
     />
 
-  <ImageButton
-    android:id="@+id/backward"
-    android:layout_width="wrap_content"
+  <Button
+    android:id="@+id/calibrater"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
+    style="@style/AppTheme.Button.Colored"
 
-    android:contentDescription="@string/cd_backward"
-    android:src="@drawable/forward_white_36"
-    android:tint="@color/colorPrimary"
-    android:rotation="180"
+    android:text="@string/calibrate_neutral_zone"
 
-    app:layout_constraintTop_toBottomOf="@id/left"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toEndOf="@id/left"
-    app:layout_constraintEnd_toStartOf="@id/right"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
     />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
