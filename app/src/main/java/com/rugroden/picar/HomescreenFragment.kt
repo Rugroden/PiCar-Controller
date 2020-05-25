@@ -29,6 +29,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_homescreen.*
 import timber.log.Timber
 import java.lang.Exception
 import java.util.*
@@ -87,13 +88,9 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
     return view
   }
 
-  override fun onResume() {
-    btListAdapter.submitList(emptyList())
-    super.onResume()
-  }
-
   override fun onPause() {
     stopScan()
+    btListAdapter.submitList(emptyList())
     connectionObservable?.dispose()
     connectionObservable = null
     super.onPause()
@@ -118,14 +115,30 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
 
   override fun onclick(device: BluetoothDevice, view: View) {
     stopScan()
+    if(::scanButton.isInitialized){
+      scanButton.text = getString(R.string.connecting)
+      scanButton.setOnClickListener(null)
+      scanButton.isEnabled = false
+    }
     connectionObservable?.dispose()
     connectionObservable = null
     connectionObservable = connectToDevice(device)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(
-        {},
+        {
+          scanButton.apply {
+            text = getString(R.string.scan)
+            isEnabled = true
+            setOnClickListener { startScan() }
+          }
+        },
         {error ->
+          scanButton.apply {
+            text = getString(R.string.scan)
+            isEnabled = true
+            setOnClickListener { startScan() }
+          }
           Toast.makeText(requireContext(), "Unable to connect to '${device.name ?: "device"}'", Toast.LENGTH_SHORT).show()
           Timber.e(error, "Unable to connect to device.")
         }
@@ -152,7 +165,7 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
       btAdapter.isEnabled -> {
         btListAdapter.submitList(emptyList())
         if(::scanButton.isInitialized){
-          scanButton.text = resources.getString(R.string.scanning)
+          scanButton.text = getString(R.string.scanning)
         }
         if(!receiverRegistered) {
           val filter = IntentFilter().apply {
@@ -174,7 +187,7 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
   private fun stopScan(){
     val btAdapter = BluetoothAdapter.getDefaultAdapter()
     if(::scanButton.isInitialized){
-      scanButton.text = resources.getString(R.string.scan)
+      scanButton.text = getString(R.string.scan)
     }
     if(receiverRegistered) {
       try {

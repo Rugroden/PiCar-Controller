@@ -15,5 +15,6 @@
   <string name="cd_right">right</string>
   <string name="cd_backward">backward</string>
   <string name="calibrate_neutral_zone">calibrate neutral zone</string>
+  <string name="connecting">connecting…</string>
   <!-- END CONTENT DESCRIPTION STRINGS -->
 </resources>
