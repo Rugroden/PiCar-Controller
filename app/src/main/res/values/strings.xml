@@ -1,0 +1,18 @@
+<resources>
+  <string name="app_name">PiCar</string>
+
+
+<!-- START HOMESCREEN STRINGS -->
+  <string name="scan">scan</string>
+  <string name="scanning">scanning</string>
+  <string name="need_bt_perm">App needs Bluetooth enabled to scan for cars</string>
+<!-- END HOMESCREEN STRINGS -->
+
+<!-- START CONTENT DESCRIPTION STRINGS -->
+  <string name="cd_start_bluetooth_scan">Start Bluetooth scan</string>
+  <string name="cd_forward">forward</string>
+  <string name="cd_left">left</string>
+  <string name="cd_right">right</string>
+  <string name="cd_backward">backward</string>
+<!-- END CONTENT DESCRIPTION STRINGS -->
+</resources>
