@@ -19,8 +19,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rugroden.R
 import com.rugroden.picar.utils.Constants
@@ -46,7 +44,7 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
 
   //Held stuff.
   private val btListAdapter:BtListAdapter = BtListAdapter(this)
-  private var reveiverRegistered:Boolean = false
+  private var receiverRegistered:Boolean = false
   private val broadcastReceiver:BroadcastReceiver = object : BroadcastReceiver(){
     override fun onReceive(context: Context?, intent: Intent) {
       when(intent.action){
@@ -74,7 +72,6 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
 
     recyclerView = view.findView(R.id.recycler_view){
       it.adapter = btListAdapter
-//      it.addItemDecoration(DividerItemDecoration(it.context, DividerItemDecoration.VERTICAL))
       it.addItemDecoration(VerticalSpaceItemDecoration(resources.getDimension(R.dimen.recycler_card_space).roundToInt()))
     }
 
@@ -143,13 +140,13 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
         if(::scanButton.isInitialized){
           scanButton.text = resources.getString(R.string.scanning)
         }
-        if(!reveiverRegistered) {
+        if(!receiverRegistered) {
           val filter = IntentFilter().apply {
             addAction(BluetoothDevice.ACTION_FOUND)
             addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
           }
           activity?.registerReceiver(broadcastReceiver, filter)
-          reveiverRegistered = true
+          receiverRegistered = true
           btAdapter.startDiscovery()
         }
       }
@@ -165,10 +162,10 @@ class HomescreenFragment: Fragment(), BtListAdapter.BtItemClickListener{
     if(::scanButton.isInitialized){
       scanButton.text = resources.getString(R.string.scan)
     }
-    if(reveiverRegistered) {
+    if(receiverRegistered) {
       try {
         activity?.unregisterReceiver(broadcastReceiver)
-        reveiverRegistered = false
+        receiverRegistered = false
       } catch (e: Exception) {
         Timber.e(e, "Unable to unregister broadcast receiver")
       }
